@@ -8,6 +8,6 @@ android:
 
     script:
     - ./gradlew clean testDebugUnitTest --stacktrace
-    
+
     licenses:
     - android-sdk-license-.+
