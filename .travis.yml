@@ -11,3 +11,4 @@ android:
 
 script:
 - ./gradlew clean testDebugUnitTest --stacktrace
+- ./gradlew assembleRelease
