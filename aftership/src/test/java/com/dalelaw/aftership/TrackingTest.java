@@ -10,6 +10,7 @@ import com.dalelaw.aftership.response.GetTrackingResponse;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -78,7 +79,7 @@ public class TrackingTest extends BaseTest {
             @Override
             public void onSuccess(CreateTrackingResponse response) {
                 try {
-                    assertNotNull(response.getTracking());
+                    assertNull(response.getTracking());
                 } catch (AssertionError e) {
                     error = e;
                 } finally {
