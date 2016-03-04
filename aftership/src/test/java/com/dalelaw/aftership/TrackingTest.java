@@ -79,7 +79,7 @@ public class TrackingTest extends BaseTest {
             @Override
             public void onSuccess(CreateTrackingResponse response) {
                 try {
-                    assertNull(response.getTracking());
+                    assertNotNull(response.getTracking());
                 } catch (AssertionError e) {
                     error = e;
                 } finally {
