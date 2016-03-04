@@ -25,4 +25,8 @@ public class GetTrackingResponse extends AftershipResponse {
             throw new AftershipException(AftershipException.RESPONSE_PARSE_FAILED, "Error parsing response");
         }
     }
+
+    public Tracking getTracking() {
+        return tracking;
+    }
 }

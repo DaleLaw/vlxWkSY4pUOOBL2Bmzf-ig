@@ -23,8 +23,11 @@ public class CreateTrackingResponse extends AftershipResponse {
         try {
             this.tracking = new Tracking(data.optJSONObject("tracking"));
         } catch (Exception e) {
-            throw new AftershipException(AftershipException.RESPONSE_PARSE_FAILED, "Error parsing response");
+            throw new AftershipException(AftershipException.RESPONSE_PARSE_FAILED, "Error parsing response data");
         }
     }
 
+    public Tracking getTracking() {
+        return tracking;
+    }
 }

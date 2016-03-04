@@ -13,6 +13,9 @@ public class DateUtil {
 
 
     public static Date parseDate(String dateStr) throws ParseException {
+        if (dateStr == null || dateStr.isEmpty()){
+            return null;
+        }
         DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
         return df2.parse(dateStr);
     }

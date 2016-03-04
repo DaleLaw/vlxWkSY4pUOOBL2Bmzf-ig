@@ -15,13 +15,10 @@ import okhttp3.Response;
  */
 public abstract class AftershipResponse {
 
+    private final int status;
     private final int code;
     private final String message;
     private final String type;
-    //Just a internal properties holder, don't really need getter & setter
-    public Response originalResponse;
-
-    private final int status;
     public final int rateLimitReset;
     public final int rateLimitLimit;
     public final int rateLimitRemaining;
@@ -48,11 +45,10 @@ public abstract class AftershipResponse {
 
         //Parse response
         try{
-            originalResponse = response;
+            status = response.code();
+
 
             Headers headers = response.headers();
-
-            status = Integer.parseInt(headers.get("status"));
             rateLimitReset = Integer.parseInt(headers.get("X-RateLimit-Reset"));
             rateLimitLimit = Integer.parseInt(headers.get("X-RateLimit-Limit"));
             rateLimitRemaining = Integer.parseInt(headers.get("X-RateLimit-Remaining"));
@@ -68,11 +64,34 @@ public abstract class AftershipResponse {
             JSONObject data = json.optJSONObject("data");
             parseData(data);
 
-        } catch (Exception e) {
-            throw new AftershipException(AftershipException.RESPONSE_PARSE_FAILED, "Error parsing response", e);
+        }
+        catch (AftershipException e){
+            throw e;
+        }
+        catch (Exception e) {
+            throw new AftershipException(AftershipException.RESPONSE_PARSE_FAILED, "Error parsing response meta", e);
         }
     }
 
     protected abstract void parseData(JSONObject data) throws AftershipException;
 
+    public boolean isSuccessful(){
+        return status >= 200 && status <= 299;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public int getStatus() {
+        return status;
+    }
 }

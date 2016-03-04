@@ -183,7 +183,6 @@ public class Tracking {
     }
 
     public JSONObject toJson() throws JSONException{
-        JSONObject globalJSON = new JSONObject();
         JSONObject trackingJSON = new JSONObject();
         JSONObject customFieldsJSON;
 
@@ -216,9 +215,8 @@ public class Tracking {
             }
             trackingJSON.put("custom_fields", customFieldsJSON);
         }
-        globalJSON.put("tracking", trackingJSON);
 
-        return globalJSON;
+        return trackingJSON;
     }
 
 

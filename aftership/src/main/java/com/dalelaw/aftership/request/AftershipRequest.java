@@ -1,5 +1,7 @@
 package com.dalelaw.aftership.request;
 
+import com.dalelaw.aftership.error.AftershipException;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,4 +30,6 @@ public abstract class AftershipRequest {
     public String getHttpMethod() {
         return httpMethod;
     }
+
+    public abstract String getRestEndPoint() throws AftershipException;
 }

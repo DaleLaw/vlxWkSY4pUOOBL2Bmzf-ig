@@ -35,7 +35,7 @@ public class Aftership{
     private static final int READ_TIMEOUT = 3000;
     private static final int RETRY_COUNT = 3;
 
-    private static final String URL = "https://api.aftership.com/v4";
+    private static final String URL = "https://api.aftership.com/v4/";
 
     private boolean waitIfTooFrequent;
 
@@ -75,6 +75,7 @@ public class Aftership{
             Response response = client.newCall(okHttpRequest).execute();
 
             AftershipResponse aftershipResponse = createAftershipReponse(request, response);
+            response.body().close();
             callback.onSuccess(aftershipResponse);
 
         } catch (AftershipException e) {
@@ -104,6 +105,9 @@ public class Aftership{
                     } catch (AftershipException e) {
                         callback.onError(e);
                     }
+                    finally {
+                        response.body().close();
+                    }
                 }
             });
         } catch (AftershipException e) {
@@ -114,9 +118,12 @@ public class Aftership{
 
     private Request createOkHttpRequest(AftershipRequest request) throws AftershipException {
         try {
-            RequestBody body = RequestBody.create(MediaType.parse("application/json"), request.toJson().toString());
+            RequestBody body = null;
+            if (!request.getHttpMethod().equals(AftershipRequest.HTTP_GET)){
+                body = RequestBody.create(MediaType.parse("application/json"), request.toJson().toString());
+            }
             Request okHttpRequest = new Request.Builder()
-                    .url(URL)
+                    .url(URL + request.getRestEndPoint())
                     .addHeader("aftership-api-key", apiKey)
                     .addHeader("Content-Type", "application/json")
                     .addHeader("aftership-user-agent", "aftership-android-sdk " + BuildConfig.VERSION_NAME)
