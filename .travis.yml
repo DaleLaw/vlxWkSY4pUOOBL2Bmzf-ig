@@ -1,9 +1,9 @@
 language: android
 android:
-components:
-- platform-tools
-- build-tools-23.0.1
-- android-22
+    components:
+    - platform-tools
+    - build-tools-23.0.1
+    - android-23
 
-script:
-- ./gradlew clean testDebugUnitTest --stacktrace
+    script:
+    - ./gradlew clean testDebugUnitTest --stacktrace
