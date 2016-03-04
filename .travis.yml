@@ -6,4 +6,4 @@ components:
 - android-23
 
 script:
-- ./gradlew build connectedCheck
+- ./gradlew clean testDebugUnitTest
