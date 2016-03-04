@@ -6,8 +6,8 @@ android:
     - android-23
     - extra-android-m2repository
 
-    script:
-    - ./gradlew clean testDebugUnitTest --stacktrace
-
     licenses:
     - android-sdk-license-.+
+    
+script:
+- ./gradlew clean testDebugUnitTest --stacktrace
