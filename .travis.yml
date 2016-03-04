@@ -6,4 +6,4 @@ components:
 - android-23
 
 script:
-- ./gradlew clean testDebugUnitTest
+- ./gradlew clean testDebugUnitTest --stacktrace
