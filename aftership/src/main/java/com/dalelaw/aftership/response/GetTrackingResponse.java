@@ -20,7 +20,9 @@ public class GetTrackingResponse extends AftershipResponse {
     @Override
     protected void parseData(JSONObject data) throws AftershipException {
         try {
-            this.tracking = new Tracking(data.optJSONObject("tracking"));
+            if (!data.isNull("tracking")) {
+                this.tracking = new Tracking(data.getJSONObject("tracking"));
+            }
         } catch (Exception e) {
             throw new AftershipException(AftershipException.RESPONSE_PARSE_FAILED, "Error parsing response");
         }

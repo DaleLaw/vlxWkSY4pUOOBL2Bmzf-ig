@@ -8,16 +8,12 @@ import com.dalelaw.aftership.request.GetTrackingRequest;
 import com.dalelaw.aftership.response.CreateTrackingResponse;
 import com.dalelaw.aftership.response.GetTrackingResponse;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by DaleLaw on 3/3/2016.
@@ -115,7 +111,7 @@ public class TrackingTest extends BaseTest {
             @Override
             public void onSuccess(CreateTrackingResponse response) {
                 try {
-                    assertEquals(response.getStatus(), 400);
+                    assertEquals(response.getStatusCode(), 400);
                 } catch (AssertionError e) {
                     error = e;
                 } finally {
@@ -203,4 +199,5 @@ public class TrackingTest extends BaseTest {
             throw error;
         }
     }
+
 }

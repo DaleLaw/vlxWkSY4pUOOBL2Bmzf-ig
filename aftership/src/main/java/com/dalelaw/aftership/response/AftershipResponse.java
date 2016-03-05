@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Date;
 
 import okhttp3.Headers;
 import okhttp3.Response;
@@ -15,7 +16,7 @@ import okhttp3.Response;
  */
 public abstract class AftershipResponse {
 
-    private final int status;
+    private final int statusCode;
     private final int code;
     private final String message;
     private final String type;
@@ -23,6 +24,7 @@ public abstract class AftershipResponse {
     public final int rateLimitLimit;
     public final int rateLimitRemaining;
     private final String responseTime;
+    private final long serverTime;
 
 
     public AftershipResponse(Response response) throws AftershipException {
@@ -45,10 +47,11 @@ public abstract class AftershipResponse {
 
         //Parse response
         try{
-            status = response.code();
+            statusCode = response.code();
 
 
             Headers headers = response.headers();
+            serverTime = new Date(headers.get("Date")).getTime();
             rateLimitReset = Integer.parseInt(headers.get("X-RateLimit-Reset"));
             rateLimitLimit = Integer.parseInt(headers.get("X-RateLimit-Limit"));
             rateLimitRemaining = Integer.parseInt(headers.get("X-RateLimit-Remaining"));
@@ -64,6 +67,7 @@ public abstract class AftershipResponse {
             JSONObject data = json.optJSONObject("data");
             parseData(data);
 
+
         }
         catch (AftershipException e){
             throw e;
@@ -76,7 +80,7 @@ public abstract class AftershipResponse {
     protected abstract void parseData(JSONObject data) throws AftershipException;
 
     public boolean isSuccessful(){
-        return status >= 200 && status <= 299;
+        return statusCode >= 200 && statusCode <= 299;
     }
 
     public int getCode() {
@@ -91,7 +95,27 @@ public abstract class AftershipResponse {
         return type;
     }
 
-    public int getStatus() {
-        return status;
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public int getRateLimitReset() {
+        return rateLimitReset;
+    }
+
+    public int getRateLimitLimit() {
+        return rateLimitLimit;
+    }
+
+    public int getRateLimitRemaining() {
+        return rateLimitRemaining;
+    }
+
+    public String getResponseTime() {
+        return responseTime;
+    }
+
+    public long getServerTime() {
+        return serverTime;
     }
 }

@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -33,11 +32,10 @@ public class Aftership{
     private static final int CONNECT_TIMEOUT = 3000;
     private static final int WRITE_TIMEOUT = 3000;
     private static final int READ_TIMEOUT = 3000;
-    private static final int RETRY_COUNT = 3;
 
-    private static final String URL = "https://api.aftership.com/v4/";
+    private String url = "https://api.aftership.com/v4/";
 
-    private boolean waitIfTooFrequent;
+    private boolean waitIfRateLimitReached;
 
     private final String apiKey;
 
@@ -46,25 +44,11 @@ public class Aftership{
 
     public Aftership(String apiKey) {
         this.apiKey = apiKey;
-        this.waitIfTooFrequent = false;
+        this.waitIfRateLimitReached = false;
         this.client = new OkHttpClient.Builder()
             .connectTimeout(CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
             .writeTimeout(WRITE_TIMEOUT * 2, TimeUnit.MILLISECONDS)
             .readTimeout(READ_TIMEOUT, TimeUnit.MILLISECONDS)
-            .addInterceptor(new Interceptor() {
-                @Override
-                public Response intercept(Chain chain) throws IOException {
-                    //Intercept and handle retry cases before further parsing
-                    Request request = chain.request();
-                    Response response = chain.proceed(request);
-                    int tryCount = 0;
-                    while (!response.isSuccessful() && tryCount < RETRY_COUNT) {
-                        tryCount++;
-                        response = chain.proceed(request);
-                    }
-                    return response;
-                }
-            })
             .build();
 
     }
@@ -75,8 +59,29 @@ public class Aftership{
             Response response = client.newCall(okHttpRequest).execute();
 
             AftershipResponse aftershipResponse = createAftershipReponse(request, response);
-            response.body().close();
-            callback.onSuccess(aftershipResponse);
+
+
+            //Rate limit handling
+            if (aftershipResponse.getStatusCode() == 429 && waitIfRateLimitReached){
+                long waitSeconds = aftershipResponse.getRateLimitReset() - aftershipResponse.getServerTime() / 1000;
+                //Local time is accurate
+                if (waitSeconds <= 0){
+                    executeSync(request, callback);
+                }
+                else{
+                    try {
+                        Thread.sleep(waitSeconds * 1000);
+                        executeSync(request, callback);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            else{
+                response.body().close();
+                callback.onSuccess(aftershipResponse);
+            }
+
 
         } catch (AftershipException e) {
             //propagate the error
@@ -101,7 +106,29 @@ public class Aftership{
                 public void onResponse(Call call, Response response){
                     try {
                         AftershipResponse aftershipResponse = createAftershipReponse(request, response);
-                        callback.onSuccess(aftershipResponse);
+
+
+                        //Rate limit handling
+                        if (aftershipResponse.getStatusCode() == 429 && waitIfRateLimitReached){
+                            long waitSeconds = aftershipResponse.getRateLimitReset() - aftershipResponse.getServerTime() / 1000;
+                            //Local time is accurate
+                            if (waitSeconds <= 0){
+                                executeSync(request, callback);
+                            }
+                            else{
+                                try {
+                                    Thread.sleep(waitSeconds * 1000);
+                                    executeAsync(request, callback);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                        else{
+                            callback.onSuccess(aftershipResponse);
+                        }
+
+
                     } catch (AftershipException e) {
                         callback.onError(e);
                     }
@@ -123,7 +150,7 @@ public class Aftership{
                 body = RequestBody.create(MediaType.parse("application/json"), request.toJson().toString());
             }
             Request okHttpRequest = new Request.Builder()
-                    .url(URL + request.getRestEndPoint())
+                    .url(url + request.getRestEndPoint())
                     .addHeader("aftership-api-key", apiKey)
                     .addHeader("Content-Type", "application/json")
                     .addHeader("aftership-user-agent", "aftership-android-sdk " + BuildConfig.VERSION_NAME)
@@ -156,11 +183,19 @@ public class Aftership{
         return apiKey;
     }
 
-    public boolean isWaitIfTooFrequent() {
-        return waitIfTooFrequent;
+    public boolean isWaitIfRateLimitReached() {
+        return waitIfRateLimitReached;
     }
 
-    public void setWaitIfTooFrequent(boolean waitIfTooFrequent) {
-        this.waitIfTooFrequent = waitIfTooFrequent;
+    public void setWaitIfRateLimitReached(boolean waitIfRateLimitReached) {
+        this.waitIfRateLimitReached = waitIfRateLimitReached;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }
