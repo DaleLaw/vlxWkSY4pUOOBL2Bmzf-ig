@@ -36,7 +36,7 @@ aftership.executeSync(getTrackingRequest, new AftershipCallback<GetTrackingRespo
 ```
 
 ### Rate Limit Handling
-Set this flag if you would like to pend the request when rate limit is reached. Set to false if you would like to handle it manually. An AftershipException would be thrown instead.
+Set this flag if you would like to pend the request when rate limit is reached(Default value is true). Set to false if you would like to handle it manually. An AftershipException would be thrown instead.
 ```
 aftership.setWaitIfRateLimitReached(true);
 ```
@@ -48,3 +48,12 @@ aftership.setWaitIfRateLimitReached(true);
 ./gradlew clean testDebug
 ```
 
+### Code structure
+```
+Main Classes:
+1. Aftership: This class is responsible for managing and executing calls with respect to one API key
+2. AftershipRequest: Abstract class for construction of HTTP request
+3. AftershipResponse: Abstract class for parsing HTTP response
+4. AftershipCallback: Callback for api call.
+5. AftershipException: Internal exception encountered will be wrapped by AftershipException and be thrown.
+```
