@@ -1,7 +1,6 @@
 package com.dalelaw.aftership;
 
 import com.dalelaw.aftership.error.AftershipException;
-import com.dalelaw.aftership.http.AftershipCallback;
 import com.dalelaw.aftership.request.GetTrackingRequest;
 import com.dalelaw.aftership.response.GetTrackingResponse;
 import com.squareup.okhttp.mockwebserver.MockResponse;

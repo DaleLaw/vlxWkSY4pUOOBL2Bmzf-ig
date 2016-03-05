@@ -1,4 +1,4 @@
-package com.dalelaw.aftership.http;
+package com.dalelaw.aftership;
 
 import com.dalelaw.aftership.error.AftershipException;
 import com.dalelaw.aftership.response.AftershipResponse;
