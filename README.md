@@ -35,6 +35,12 @@ aftership.executeSync(getTrackingRequest, new AftershipCallback<GetTrackingRespo
 );
 ```
 
+### Rate Limit Handling
+Set this flag if you would like to pend the request when rate limit is reached. Set to false if you would like to handle it manually. An AftershipException would be thrown instead.
+```
+aftership.setWaitIfRateLimitReached(true);
+```
+
 
 
 ### Run the Tests
