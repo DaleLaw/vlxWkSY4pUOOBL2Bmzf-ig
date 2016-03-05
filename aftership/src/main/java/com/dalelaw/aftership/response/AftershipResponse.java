@@ -12,7 +12,7 @@ import okhttp3.Headers;
 import okhttp3.Response;
 
 /**
- * Created by DaleLaw on 23/2/2016.
+ * Abstract class for parsing HTTP response
  */
 public abstract class AftershipResponse {
 

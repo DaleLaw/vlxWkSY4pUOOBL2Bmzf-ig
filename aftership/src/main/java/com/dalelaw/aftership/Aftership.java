@@ -23,7 +23,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
- * Created by dalelaw on 22/2/2016.
+ * This class is responsible for managing and executing calls with respect to one API key
  */
 public class Aftership{
 
@@ -177,8 +177,8 @@ public class Aftership{
 
 
     /**
-         * Getter & Setter
-         **/
+     * Getter & Setter
+     **/
     public String getApiKey() {
         return apiKey;
     }

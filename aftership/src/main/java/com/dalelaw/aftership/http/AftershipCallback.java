@@ -1,13 +1,13 @@
 package com.dalelaw.aftership.http;
 
-import com.dalelaw.aftership.R;
 import com.dalelaw.aftership.error.AftershipException;
 import com.dalelaw.aftership.response.AftershipResponse;
 
 /**
- * Created by DaleLaw on 24/2/2016.
+ * Abstract Callback for api call.
+ * Generic R must inherits from AftershipResponse class
  */
-public interface AftershipCallback<R>{
+public interface AftershipCallback<R extends AftershipResponse>{
 
     void onSuccess(R response);
 

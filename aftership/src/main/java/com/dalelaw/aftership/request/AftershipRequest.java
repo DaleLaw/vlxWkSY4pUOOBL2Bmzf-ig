@@ -6,7 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by dalelaw on 22/2/2016.
+ * Abstract class for construction of HTTP request
  */
 public abstract class AftershipRequest {
 

@@ -1,7 +1,7 @@
 package com.dalelaw.aftership.error;
 
 /**
- * Created by DaleLaw on 22/2/2016.
+ * Internal exception encountered will be wrapped by AftershipException and be thrown.
  */
 public class AftershipException extends Exception{
 
