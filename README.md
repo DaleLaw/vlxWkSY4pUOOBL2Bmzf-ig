@@ -1,3 +1,5 @@
+![Travis CI](https://travis-ci.org/developerdalelaw/vlxWkSY4pUOOBL2Bmzf-ig.svg?branch=master)
+
 ### Usage
 First initialize the aftership client by the api key.
 ```
